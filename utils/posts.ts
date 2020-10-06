@@ -3,20 +3,25 @@ export const Gadget = new Client({
   apiKey: process.env["GADGET_API_KEY"],
 });
 
-export const getSortedPosts = async () => {
-  return await Gadget.posts.findMany({ sort: { publishedAt: "Descending" } });
-};
-
-export async function getPostsSlugs() {
-  return (await Gadget.posts.findMany()).map((post) => post.slug);
+export interface Post {
+  id: string;
+  [key: string]: any;
 }
 
-export async function getPostBySlug(slug) {
+export const getSortedPosts = async (): Promise<Post[]> => {
+  return (await Gadget.posts.findMany({ sort: { publishedAt: "Descending" } })).map((record: any) => record.toJSON());
+};
+
+export async function getPostsSlugs(): Promise<string[]> {
+  return (await Gadget.posts.findMany()).map((post: any) => post.slug);
+}
+
+export async function getPostBySlug(slug: string): Promise<{ post: Post; previousPost?: Post; nextPost?: Post }> {
   const post = (
     await Gadget.posts.findMany({
       filter: { slug: { equals: slug } },
     })
-  )[0];
+  )[0]?.toJSON();
 
   const nextPost = (
     await Gadget.posts.findMany({
@@ -24,7 +29,7 @@ export async function getPostBySlug(slug) {
       filter: { publishedAt: { greaterThan: post.publishedAt } },
       first: 1,
     })
-  )[0];
+  )[0]?.toJSON();
 
   const previousPost = (
     await Gadget.posts.findMany({
@@ -32,7 +37,7 @@ export async function getPostBySlug(slug) {
       filter: { publishedAt: { greaterThan: post.publishedAt } },
       first: 1,
     })
-  )[0];
+  )[0]?.toJSON();
 
   return { post, previousPost, nextPost };
 }

@@ -1,27 +1,24 @@
+import { Layout } from "components/Layout";
+import { SEO } from "components/Seo";
+import { GetStaticPaths, GetStaticProps } from "next";
 import Link from "next/link";
+import React from "react";
 import ReactMarkdown from "react-markdown/with-html";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { getPostBySlug, getPostsSlugs, Post } from "utils/posts";
 
-import Layout from "components/Layout";
-import Image from "components/Image";
-import SEO from "components/Seo";
-import { getPostBySlug, getPostsSlugs } from "utils/posts";
-import Bio from "components/Bio";
-
-const CodeBlock = ({ language, value }) => {
-  return <SyntaxHighlighter language={language}>{value}</SyntaxHighlighter>;
+const CodeBlock = (props: { language: string; value: string }) => {
+  return <SyntaxHighlighter language={props.language}>{props.value}</SyntaxHighlighter>;
 };
 
-export default function Post({ post, nextPost, previousPost }) {
+export default function PostPage({ post, nextPost, previousPost }: { post: Post; previousPost?: Post; nextPost?: Post }) {
   return (
     <Layout>
       <SEO title={post.title} description={post.body} />
 
       <article>
         <header className="mb-8">
-          <h1 className="mb-2 text-6xl font-black leading-none font-display">
-            {post.title}
-          </h1>
+          <h1 className="mb-2 text-6xl font-black leading-none font-display">{post.title}</h1>
           <p className="text-sm">{post.publishedAt}</p>
         </header>
         <ReactMarkdown
@@ -31,9 +28,7 @@ export default function Post({ post, nextPost, previousPost }) {
           renderers={{ code: CodeBlock }}
         />
         <hr className="mt-4" />
-        <footer>
-          {/* <Bio author={post.author} className="mt-8 mb-16" /> */}
-        </footer>
+        <footer>{/* <Bio author={post.author} className="mt-8 mb-16" /> */}</footer>
       </article>
       <nav className="flex justify-between mb-10">
         {previousPost ? (
@@ -55,25 +50,17 @@ export default function Post({ post, nextPost, previousPost }) {
   );
 }
 
-export async function getStaticPaths() {
+export const getStaticPaths: GetStaticPaths = async () => {
   const slugs = await getPostsSlugs();
 
   return {
     paths: slugs.map((slug) => `/post/${slug}`),
     fallback: false,
   };
-}
+};
 
-export async function getStaticProps({ params: { slug } }) {
-  const postData = await getPostBySlug(slug);
-
-  if (!postData.previousPost) {
-    postData.previousPost = null;
-  }
-
-  if (!postData.nextPost) {
-    postData.nextPost = null;
-  }
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const postData = await getPostBySlug(params!.slug as any);
 
   return { props: postData };
-}
+};
