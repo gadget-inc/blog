@@ -1,3 +1,4 @@
+import { useStyletron } from "baseui";
 import { Heading, HeadingLevel } from "baseui/heading";
 import { Cell, Grid } from "baseui/layout-grid";
 import { StyledLink } from "baseui/link";
@@ -9,13 +10,14 @@ import SiteConfig from "../site.config";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const { pathname } = useRouter();
+  const [css, $theme] = useStyletron();
   const isRoot = pathname === "/";
 
   return (
     <HeadingLevel>
       <Grid>
         <Cell span={[1, 4, 8, 12]}>
-          <header>
+          <header className={css({ marginBottom: $theme.sizing.scale400 })}>
             <Link href="/" passHref>
               <Heading as="a">{SiteConfig.siteMetadata.title}</Heading>
             </Link>

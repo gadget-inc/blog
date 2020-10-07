@@ -11,13 +11,17 @@
     "lint:fix": "prettier --write --loglevel warn \"**/*.{js,ts,tsx}\" && eslint --ext js,ts,tsx --fix pages components utils"
   },
   "dependencies": {
+    "@gadget-client/blog": "^1.445.0",
     "@gadgetinc/themes": "^0.2.0",
+    "@types/inflected": "^1.1.29",
     "@types/styletron-react": "^5.0.2",
     "baseui": "^9.101.0",
-    "blog-client": "https://blog.gadget.dev/api/client/tarball",
     "clsx": "^1.1.1",
+    "date-fns": "^2.16.1",
+    "graphql-tag": "^2.11.0",
     "imagemin-mozjpeg": "^9.0.0",
     "imagemin-optipng": "^8.0.0",
+    "inflected": "^2.1.0",
     "lazysizes": "^5.2.2",
     "lqip-loader": "^2.2.0",
     "next": "^9.5.3",

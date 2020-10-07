@@ -12,11 +12,6 @@ html {
   font-feature-settings: "kern";
 }
 
-html,
-body {
-  height: 100%;
-}
-
 .blur-up {
   -webkit-filter: blur(5px);
   filter: blur(5px);
